@@ -15,7 +15,7 @@ ProfileType = tuple[str, FreqDictType, int]
 
 
 def tokenize(text: str) -> Sequence[str] | None:
-    if not isinstance(text, str): #нужна ли проверка типа данных
+    if not isinstance(text, str): #нужна ли проверка типа данных? можно проверить при помощи type()
         return None
     text = text.lower().split()
     tokens = []
@@ -34,8 +34,6 @@ def remove_stop_words(tokens: Sequence[str], stop_words: Sequence[str]) -> Seque
     if not isinstance(tokens, Sequence) or not isinstance(stop_words, Sequence):
         return None
     clean_tokens = [word for word in tokens if word not in stop_words]
-    if tokens == clean_tokens:
-        return None
     return clean_tokens #нужны ли множества??
 
 
