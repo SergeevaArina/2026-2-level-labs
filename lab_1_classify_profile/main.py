@@ -15,30 +15,28 @@ ProfileType = tuple[str, FreqDictType, int]
 
 
 def tokenize(text: str) -> Sequence[str] | None:
-    """
-    Splits a text into tokens, converts the tokens into lowercase,
-    removes punctuation and other symbols from words
-
-    Args:
-       text (str): Text
-
-    Returns:
-        Sequence[str] | None: Sequence of lower-cased tokens without punctuation.
-        Returns None if input text is not a string.
-    """
+    if not isinstance(text, str): #нужна ли проверка типа данных
+        return None
+    text = text.lower().split()
+    tokens = []
+    for word in text:
+        list_of_letters = []
+        for letter in word:
+            if letter.isalpha():
+                list_of_letters.append(letter)
+        new_word = ''.join(list_of_letters)
+        if new_word:
+            tokens.append(new_word)
+    return tokens
 
 
 def remove_stop_words(tokens: Sequence[str], stop_words: Sequence[str]) -> Sequence[str] | None:
-    """
-    Removes stop words
-
-    Args:
-        tokens (Sequence[str]): Sequence of tokens
-        stop_words (Sequence[str]): Sequence of stop words (can be empty)
-    Returns:
-        Sequence[str] | None: Sequence of tokens without stop words.
-        Returns None in case of incorrect input types.
-    """
+    if not isinstance(tokens, Sequence) or not isinstance(stop_words, Sequence):
+        return None
+    clean_tokens = [word for word in tokens if word not in stop_words]
+    if tokens == clean_tokens:
+        return None
+    return clean_tokens #нужны ли множества??
 
 
 def calculate_frequencies(tokens: Sequence[str]) -> dict[str, float] | None:
