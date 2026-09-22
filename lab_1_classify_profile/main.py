@@ -105,7 +105,7 @@ def get_top_n_words(freq_dict: dict[str, float], top_n: int) -> Sequence[str] | 
         return None
 
     sorted_words = sorted(freq_dict.items(), key=lambda x: (-x[1], x[0]))
-    top_n_list = [word for word, number in sorted_words[:top_n]]
+    top_n_list = [word for word, _ in sorted_words[:top_n]]
     return top_n_list
 
 # Mark 6.
@@ -183,6 +183,7 @@ def compare_profiles_by_top_n(
         float | None: The distance between profiles.
         Returns None in case of incorrect input types.
     """
+
 
 
 def detect_language_by_top_n(
