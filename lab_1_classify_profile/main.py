@@ -64,6 +64,7 @@ def remove_stop_words(tokens: Sequence[str], stop_words: Sequence[str]) -> Seque
             ])
         ]):
         return None
+
     if not all([
         [isinstance(word, str) for word in tokens],
         [isinstance(word, str) for word in stop_words]
@@ -118,13 +119,17 @@ def get_top_n_words(freq_dict: dict[str, float], top_n: int) -> Sequence[str] | 
     """
     if not all([
         isinstance(freq_dict, dict),
-        all([
-            isinstance(word, str) and isinstance(number, float)
-            for word, number in freq_dict.items()
-            ]),
-        isinstance(top_n, int),
-        top_n >= 0
+        isinstance(top_n, int)
         ]):
+        return None
+
+    if top_n <= 0:
+        return None
+
+    if not all([
+                isinstance(word, str) and isinstance(number, float)
+                for word, number in freq_dict.items()
+                ]):
         return None
 
     sorted_words = sorted(freq_dict.items(), key=lambda x: (-x[1], x[0]))
@@ -158,6 +163,7 @@ def create_language_profile(
             ])
         ]):
         return None
+
     if not all([isinstance(word, str) for word in stop_words]):
         return None
 
