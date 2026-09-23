@@ -224,7 +224,7 @@ def compare_profiles_by_top_n(
     if not isinstance(top_n, int) or top_n <= 0:
         return None
 
-    if not any([
+    if not all([
         check_profile(unknown_profile),
         check_profile(profile_to_compare)
         ]):
