@@ -232,13 +232,14 @@ def compare_profiles_by_top_n(
 
     top_n_unknown = get_top_n_words(unknown_profile[1], top_n)
     top_n_to_compare = get_top_n_words(profile_to_compare[1], top_n)
-    common_tokens = [word for word in top_n_unknown if word in top_n_to_compare]
 
     if not all([
-        isinstance(top_n_unknown, list),
-        isinstance(top_n_to_compare, list)
-    ]):
-        return None
+            isinstance(top_n_unknown, list),
+            isinstance(top_n_to_compare, list)
+        ]):
+            return None
+
+    common_tokens = [word for word in top_n_unknown if word in top_n_to_compare]
 
     if not common_tokens:
         common_tokens_numb = 0
