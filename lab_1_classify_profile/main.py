@@ -237,14 +237,14 @@ def compare_profiles_by_top_n(
             isinstance(top_n_unknown, list),
             isinstance(top_n_to_compare, list)
         ]):
-            return None
+        return None
 
     if not top_n_unknown:
         return None
 
     common_tokens = [word for word in top_n_unknown if word in top_n_to_compare]
 
-    return len(common_tokens) / len(top_n_unknown )
+    return len(common_tokens) / len(top_n_unknown)
 
 
 def detect_language_by_top_n(
