@@ -221,7 +221,24 @@ def compare_profiles_by_top_n(
         float | None: The distance between profiles.
         Returns None in case of incorrect input types.
     """
+    if not isinstance(top_n, int) or top_n <= 0:
+        return None
 
+    if not any([
+        check_profile(unknown_profile),
+        check_profile(profile_to_compare)
+        ]):
+        return None
+
+    top_n_unknown = get_top_n_words(unknown_profile[1], top_n)
+    top_n_to_compare = get_top_n_words(profile_to_compare[1], top_n)
+    common_tokens = [word for word in top_n_unknown if word in top_n_to_compare]
+
+    if not common_tokens:
+        common_tokens_numb = 0
+    common_tokens_numb = len(common_tokens)
+
+    return common_tokens_numb / len(top_n_unknown )
 
 
 def detect_language_by_top_n(

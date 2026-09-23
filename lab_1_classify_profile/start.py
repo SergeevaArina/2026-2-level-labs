@@ -48,6 +48,17 @@ def main() -> None:
     if top_n_list is None:
         return None
 
+    de_prifile = create_language_profile("de", de_text, stopwords)
+    en_prifile = create_language_profile("en", en_text, stopwords)
+    unknown_prifile = create_language_profile("unknown", unknown_text, stopwords)
+
+    if (
+        de_prifile is None
+        or en_prifile is None
+        or unknown_prifile is None
+    ):
+        return None
+
     print(top_n_list)
 
     #assert result, "Detection result is None"
