@@ -5,6 +5,7 @@ Language detection starter.
 # pylint: disable=unused-variable, duplicate-code
 from lab_1_classify_profile.main import (
     calculate_frequencies,
+    check_profile,
     collect_profiles,
     create_language_profile,
     detect_language_advanced,
@@ -48,18 +49,34 @@ def main() -> None:
     if top_n_list is None:
         return None
 
+    print(top_n_list)
+
     de_prifile = create_language_profile("de", de_text, stopwords)
     en_prifile = create_language_profile("en", en_text, stopwords)
     unknown_prifile = create_language_profile("unknown", unknown_text, stopwords)
 
+    # if (
+    #     de_prifile is None
+    #     or en_prifile is None
+    #     or unknown_prifile is None
+    # ):
+    #     return None
+
+    check_unknown_prifile = check_profile(unknown_prifile)
+    check_de_prifile = check_profile(de_prifile)
+    check_en_prifile = check_profile(en_prifile)
+
     if (
-        de_prifile is None
-        or en_prifile is None
-        or unknown_prifile is None
+        check_unknown_prifile is False
+        or check_de_prifile is False
+        or check_en_prifile is False
     ):
         return None
 
-    print(top_n_list)
+    language = detect_language_by_top_n(unknown_prifile, en_prifile, en_prifile, top_n = 15)
+    if language is None:
+        return None
+    print(language)
 
     #assert result, "Detection result is None"
 
