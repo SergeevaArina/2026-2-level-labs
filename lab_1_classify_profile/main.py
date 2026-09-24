@@ -171,27 +171,25 @@ def create_language_profile(
     if not all([isinstance(word, str) for word in stop_words]):
         return None
 
-    token_text = tokenize(text)
+    tokens = tokenize(text)
 
-    if token_text is None:
+    if tokens is None:
         return None
 
-    freq_dict = (
-        calculate_frequencies(
-        remove_stop_words(token_text, stop_words))
-    )
+    clean_tokens = remove_stop_words(tokens, stop_words)
 
-    if not all([
-        remove_stop_words(token_text, stop_words),
-        calculate_frequencies(
-            remove_stop_words(token_text, stop_words)),
-        freq_dict
-        ]):
+    if clean_tokens is None:
+        return None
+
+    freq_dict = calculate_frequencies(clean_tokens)
+
+    if freq_dict is None:
         return None
 
     uniq_token = len(freq_dict)
     language_profile = (language, freq_dict, uniq_token)
     return language_profile
+
 
 def check_profile(profile: ProfileType) -> bool:
     """
