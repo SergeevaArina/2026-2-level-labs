@@ -189,7 +189,7 @@ def create_language_profile(
         ]):
         return None
 
-    uniq_token = len(token_text)
+    uniq_token = len(freq_dict)
     language_profile = (language, freq_dict, uniq_token)
     return language_profile
 
