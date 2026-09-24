@@ -172,11 +172,24 @@ def create_language_profile(
         return None
 
     token_text = tokenize(text)
+
+    if token_text is None:
+        return None
+
     freq_dict = (
         calculate_frequencies(
         remove_stop_words(token_text, stop_words))
     )
-    uniq_token = len(set(token_text))
+
+    if not all([
+        remove_stop_words(token_text, stop_words),
+        calculate_frequencies(
+            remove_stop_words(token_text, stop_words)),
+        freq_dict
+        ]):
+        return None
+
+    uniq_token = len(token_text)
     language_profile = (language, freq_dict, uniq_token)
     return language_profile
 
