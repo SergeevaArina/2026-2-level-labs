@@ -294,10 +294,10 @@ def detect_language_by_top_n(
         return profile_1[0]
     elif common_freq_1 < common_freq_2:
         return profile_2[0]
-
-    if profile_1[0] >= profile_2[0]:
-        return profile_1[0]
-    return profile_2[0]
+    else:
+        if profile_1[0] > profile_2[0]:
+            return profile_1[0]
+        return profile_2[0]
 
 
 # Mark 8
