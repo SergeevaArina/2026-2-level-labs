@@ -131,9 +131,9 @@ def get_top_n_words(freq_dict: dict[str, float], top_n: int) -> Sequence[str] | 
         return None
 
     if not all([
-                isinstance(word, str) and isinstance(number, float)
-                for word, number in freq_dict.items()
-                ]):
+        isinstance(word, str) and isinstance(number, float)
+        for word, number in freq_dict.items()
+        ]):
         return None
 
     sorted_words = sorted(freq_dict.items(), key=lambda x: (-x[1], x[0]))
@@ -234,8 +234,8 @@ def compare_profiles_by_top_n(
     top_n_to_compare = get_top_n_words(profile_to_compare[1], top_n)
 
     if not all([
-            isinstance(top_n_unknown, list),
-            isinstance(top_n_to_compare, list)
+        isinstance(top_n_unknown, list),
+        isinstance(top_n_to_compare, list)
         ]):
         return None
 
@@ -244,12 +244,7 @@ def compare_profiles_by_top_n(
 
     common_tokens = [word for word in top_n_unknown if word in top_n_to_compare]
 
-    if not common_tokens:
-        common_tokens_numb = 0
-    else:
-        common_tokens_numb = len(common_tokens)
-
-    return common_tokens_numb / len(top_n_unknown)
+    return len(common_tokens) / len(top_n_unknown)
 
 
 def detect_language_by_top_n(
