@@ -244,7 +244,12 @@ def compare_profiles_by_top_n(
 
     common_tokens = [word for word in top_n_unknown if word in top_n_to_compare]
 
-    return len(common_tokens) / len(top_n_unknown)
+    if not common_tokens:
+        common_tokens_numb = 0
+    else:
+        common_tokens_numb = len(common_tokens)
+
+    return common_tokens_numb / len(top_n_unknown)
 
 
 def detect_language_by_top_n(
