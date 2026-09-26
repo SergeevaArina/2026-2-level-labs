@@ -313,6 +313,32 @@ def calculate_mse(predicted: Sequence[float], actual: Sequence[float]) -> float 
         Returns None in case of incorrect input types or mismatched length.
         In case of empty inputs, returns 0.0.
     """
+    if not all([
+        any([
+            isinstance(predicted, list),
+            isinstance(predicted, tuple)
+            ]),
+        any([
+            isinstance(actual, list),
+            isinstance(actual, tuple)
+            ])
+        ]):
+        return None
+
+    if not all([isinstance(freq, str) for freq in predicted]):
+        return None
+
+    if not all([isinstance(freq, str) for freq in actual]):
+            return None
+
+    if len(predicted) != len(predicted):
+        return None
+
+    if len(predicted) == 0 or len(predicted) == 0:
+        return 0.0
+
+    mean_sq_list = [(yi - pi) ** 2 for yi, pi in zip(actual, predicted)]
+    return sum(mean_sq_list) / len(mean_sq_list)
 
 
 def compare_profiles_by_mse(
