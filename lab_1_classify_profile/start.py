@@ -55,21 +55,17 @@ def main() -> None:
     en_prifile = create_language_profile("en", en_text, stopwords)
     unknown_prifile = create_language_profile("unknown", unknown_text, stopwords)
 
-    # if (
-    #     de_prifile is None
-    #     or en_prifile is None
-    #     or unknown_prifile is None
-    # ):
-    #     return None
-
-    check_unknown_prifile = check_profile(unknown_prifile)
-    check_de_prifile = check_profile(de_prifile)
-    check_en_prifile = check_profile(en_prifile)
+    if (
+        de_prifile is None
+        or en_prifile is None
+        or unknown_prifile is None
+    ):
+        return None
 
     if (
-        check_unknown_prifile is False
-        or check_de_prifile is False
-        or check_en_prifile is False
+        check_profile(unknown_prifile) is False
+        or check_profile(de_prifile) is False
+        or check_profile(en_prifile) is False
     ):
         return None
 
@@ -77,6 +73,7 @@ def main() -> None:
     if language is None:
         return None
     print(language)
+
 
     #assert result, "Detection result is None"
 

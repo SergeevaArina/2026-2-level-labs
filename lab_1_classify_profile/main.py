@@ -292,7 +292,7 @@ def detect_language_by_top_n(
 
     if common_freq_1 > common_freq_2:
         return profile_1[0]
-    elif common_freq_1 < common_freq_2:
+    if common_freq_1 < common_freq_2:
         return profile_2[0]
     return min(profile_1[0], profile_2[0])
 
@@ -410,7 +410,7 @@ def detect_language_by_mse(
 
     if compare_unk_1 < compare_unk_2:
         return profile_1[0]
-    elif compare_unk_1 > compare_unk_2:
+    if compare_unk_1 > compare_unk_2:
         return profile_2[0]
     return min(profile_1[0], profile_2[0])
 
