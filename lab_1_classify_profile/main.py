@@ -212,8 +212,8 @@ def check_profile(profile: ProfileType) -> bool:
         and isinstance(freq_dict, dict)
         and isinstance(uniq_token, int)
         and all([
-            isinstance(word, str) and isinstance(number, float)
-            for word, number in freq_dict.items()
+            isinstance(word, str) and isinstance(freq, float)
+            for word, freq in freq_dict.items()
             ])
         )
 
@@ -356,6 +356,17 @@ def compare_profiles_by_mse(
         float | None: The distance between the profiles.
         In case of corrupt input arguments or invalid profile structure, None is returned.
     """
+    if not all([
+        check_profile(unknown_profile),
+        check_profile(profile_to_compare),
+        ]):
+        return None
+
+    unknown_freq_list = [freq if word in profile_to_compare[1] else 0.0 for word, freq in unknown_profile[1].items()]
+    actual_freq_list = [freq for _, freq in profile_to_compare[1]]
+
+    compare_mse = calculate_mse(unknown_freq_list, actual_freq_list)
+    return compare_mse
 
 
 def detect_language_by_mse(
@@ -374,7 +385,29 @@ def detect_language_by_mse(
         str | None: Unknown profile language.
         Returns None in case of incorrect input types.
     """
+    if not all([
+        check_profile(unknown_profile),
+        check_profile(profile_1),
+        check_profile(profile_2)
+        ]):
+        return None
 
+    compare_unk_1 = compare_profiles_by_mse(unknown_profile, profile_1)
+    compare_unk_2 = compare_profiles_by_mse(unknown_profile, profile_2)
+
+    if (
+        compare_unk_1 == 0.0
+        or compare_unk_1 is None
+        or compare_unk_1 == 0.0
+        or compare_unk_1 is None
+    ):
+        return None
+
+    if compare_unk_1 < compare_unk_2:
+        return profile_1[0]
+    elif compare_unk_1 > compare_unk_2:
+        return profile_2[0]
+    return min(profile_1[0], profile_2[0])
 
 # Mark 10
 
