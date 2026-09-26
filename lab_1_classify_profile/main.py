@@ -363,7 +363,7 @@ def compare_profiles_by_mse(
         return None
 
     unknown_freq_list = [freq if word in profile_to_compare[1] else 0.0 for word, freq in unknown_profile[1].items()]
-    actual_freq_list = [freq for _, freq in profile_to_compare[1]]
+    actual_freq_list = [freq for _, freq in profile_to_compare[1].items()]
 
     compare_mse = calculate_mse(unknown_freq_list, actual_freq_list)
     return compare_mse
