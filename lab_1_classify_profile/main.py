@@ -325,10 +325,10 @@ def calculate_mse(predicted: Sequence[float], actual: Sequence[float]) -> float 
         ]):
         return None
 
-    if not all([isinstance(freq, str) for freq in predicted]):
+    if not all([isinstance(freq, float) for freq in predicted]):
         return None
 
-    if not all([isinstance(freq, str) for freq in actual]):
+    if not all([isinstance(freq, float) for freq in actual]):
             return None
 
     if len(predicted) != len(predicted):
