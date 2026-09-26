@@ -331,10 +331,10 @@ def calculate_mse(predicted: Sequence[float], actual: Sequence[float]) -> float 
     if not all([isinstance(freq, float) for freq in actual]):
             return None
 
-    if len(predicted) != len(predicted):
+    if len(predicted) != len(actual):
         return None
 
-    if len(predicted) == 0 or len(predicted) == 0:
+    if len(predicted) == 0 or len(actual) == 0:
         return 0.0
 
     mean_sq_list = [(yi - pi) ** 2 for yi, pi in zip(actual, predicted)]
@@ -362,8 +362,13 @@ def compare_profiles_by_mse(
         ]):
         return None
 
-    unknown_freq_list = [freq if word in profile_to_compare[1] else 0.0 for word, freq in unknown_profile[1].items()]
-    actual_freq_list = [freq for _, freq in profile_to_compare[1].items()]
+    intersection = [word for word in unknown_profile[1]]
+    for word in profile_to_compare[1]:
+        if word not in intersection:
+            intersection.append(word)
+
+    unknown_freq_list = [unknown_profile[1].get(word, 0.0) for word in intersection]
+    actual_freq_list = [profile_to_compare[1].get(word, 0.0) for word in intersection]
 
     compare_mse = calculate_mse(unknown_freq_list, actual_freq_list)
     return compare_mse
@@ -398,8 +403,8 @@ def detect_language_by_mse(
     if (
         compare_unk_1 == 0.0
         or compare_unk_1 is None
-        or compare_unk_1 == 0.0
-        or compare_unk_1 is None
+        or compare_unk_2 == 0.0
+        or compare_unk_2 is None
     ):
         return None
 
