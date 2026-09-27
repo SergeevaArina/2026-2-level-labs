@@ -445,13 +445,13 @@ def load_profile(path_to_file: str) -> ProfileType | None:
         ProfileType | None: Loaded profile.
         Returns None in case of incorrect input types.
     """
-    if not not isinstance(path_to_file, str):
+    if not isinstance(path_to_file, str):
         return None
 
     with open(path_to_file, "r", encoding = "utf-8") as file:
         file_with_profile_dict = json.load(file)
 
-    if not insistance(file_with_profile_dict, dict):
+    if not isinstance(file_with_profile_dict, dict):
         return None
 
     if not all(isinstance(key, str) for key in file_with_profile_dict.keys()):
