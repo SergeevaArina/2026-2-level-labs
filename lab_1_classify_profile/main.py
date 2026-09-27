@@ -29,9 +29,9 @@ def tokenize(text: str) -> Sequence[str] | None:
     if not isinstance(text, str):
         return None
 
-    text = text.lower().split()
+    words = text.lower().split()
     tokens = []
-    for word in text:
+    for word in words:
         list_of_letters = []
         for letter in word:
             if letter.isalpha():
@@ -240,10 +240,10 @@ def compare_profiles_by_top_n(
     top_n_unknown = get_top_n_words(unknown_profile[1], top_n)
     top_n_to_compare = get_top_n_words(profile_to_compare[1], top_n)
 
-    if not all([
-        isinstance(top_n_unknown, list),
-        isinstance(top_n_to_compare, list)
-        ]):
+    if (
+        not isinstance(top_n_unknown, list)
+        or not isinstance(top_n_to_compare, list)
+        ):
         return None
 
     if not top_n_unknown:
@@ -325,7 +325,7 @@ def calculate_mse(predicted: Sequence[float], actual: Sequence[float]) -> float 
         return None
 
     if len(predicted) == 0 or len(actual) == 0:
-        return 0.0
+        return None
 
     mean_sq_list = [(yi - pi) ** 2 for yi, pi in zip(actual, predicted)]
     return sum(mean_sq_list) / len(mean_sq_list)
@@ -361,6 +361,8 @@ def compare_profiles_by_mse(
     actual_freq_list = [profile_to_compare[1].get(word, 0.0) for word in intersection]
 
     compare_mse = calculate_mse(unknown_freq_list, actual_freq_list)
+    if compare_mse is None:
+        return None
     return compare_mse
 
 
