@@ -429,7 +429,7 @@ def save_profile(profile: ProfileType, save_path: str) -> bool:
     lang_prof_dict = {"name": profile[0], "freq": profile[1], "n_words": profile[2]}
 
     with open(path, "w", encoding = "utf-8") as file:
-        json.dumps(lang_prof_dict, file, ensure_ascii=False, indent=4)
+        json.dump(lang_prof_dict, file, ensure_ascii=False, indent=4)
 
     return True
 
