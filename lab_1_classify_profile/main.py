@@ -479,7 +479,10 @@ def collect_profiles(paths_to_profiles: Sequence[str]) -> Sequence[ProfileType] 
         Sequence[ProfileType] | None: Sequence of loaded profiles.
         Returns None in case of incorrect input types.
     """
-    if not isinstance(paths_to_profiles, list) or isinstance(paths_to_profiles, tuple):
+    if not any([
+        isinstance(paths_to_profiles, list),
+        isinstance(paths_to_profiles, tuple)
+    ]):
         return None
 
     if not all(isinstance(path, str)
