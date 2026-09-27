@@ -463,7 +463,7 @@ def load_profile(path_to_file: str) -> ProfileType | None:
         file_with_profile_dict["n_words"]
         )
 
-    if not check_profile(lang_profile ):
+    if not check_profile(lang_profile):
         return None
 
     return lang_profile
@@ -479,6 +479,22 @@ def collect_profiles(paths_to_profiles: Sequence[str]) -> Sequence[ProfileType] 
         Sequence[ProfileType] | None: Sequence of loaded profiles.
         Returns None in case of incorrect input types.
     """
+    if not isinstance(paths_to_profiles, list) or isinstance(paths_to_profiles, tuple):
+        return None
+
+    if not all(isinstance(path, str)
+        for path in paths_to_profiles
+        ):
+        return None
+
+    loaded_profile_list = [
+        load_profile(path) for path in paths_to_profiles
+        if load_profile(path) is not None
+    ]
+
+    if not all(check_profile(profile) for profile in loaded_profile_list):
+        return None
+    return loaded_profile_list
 
 
 def detect_language_advanced(
