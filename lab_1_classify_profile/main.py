@@ -5,6 +5,7 @@ Language detection
 """
 
 # pylint:disable=unused-argument
+import json
 from typing import Sequence
 
 FreqDictType = dict[str, float]
@@ -421,6 +422,16 @@ def save_profile(profile: ProfileType, save_path: str) -> bool:
         bool: False in case of incorrect input types or if the profile
         is missing obligatory keys. True if the profile is saved.
     """
+    if not check_profile(profile) or not isinstance(save_path, str):
+        return False
+
+    path = f"{save_path}/{profile[0]}.json"
+    lang_prof_dict = {"name": profile[0], "freq": profile[1], "n_words": profile[2]}
+
+    with open(path, "w", encoding = "utf-8") as file:
+        json.dumps(lang_prof_dict, file, ensure_ascii=False, indent=4)
+
+    return True
 
 
 def load_profile(path_to_file: str) -> ProfileType | None:
@@ -434,7 +445,28 @@ def load_profile(path_to_file: str) -> ProfileType | None:
         ProfileType | None: Loaded profile.
         Returns None in case of incorrect input types.
     """
+    if not not isinstance(path_to_file, str):
+        return None
 
+    with open(path_to_file, "r", encoding = "utf-8") as file:
+        file_with_profile_dict = json.load(file)
+
+    if not insistance(file_with_profile_dict, dict):
+        return None
+
+    if not all(isinstance(key, str) for key in file_with_profile_dict.keys()):
+        return None
+
+    lang_profile = (
+        file_with_profile_dict["name"],
+        file_with_profile_dict["freq"],
+        file_with_profile_dict["n_words"]
+        )
+
+    if not check_profile(lang_profile ):
+        return None
+
+    return lang_profile
 
 def collect_profiles(paths_to_profiles: Sequence[str]) -> Sequence[ProfileType] | None:
     """
