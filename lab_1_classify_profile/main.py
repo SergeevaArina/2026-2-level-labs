@@ -325,7 +325,7 @@ def calculate_mse(predicted: Sequence[float], actual: Sequence[float]) -> float 
         return None
 
     if len(predicted) == 0 or len(actual) == 0:
-        return None
+        return 0.0
 
     mean_sq_list = [(yi - pi) ** 2 for yi, pi in zip(actual, predicted)]
     return sum(mean_sq_list) / len(mean_sq_list)
