@@ -40,11 +40,11 @@ def main() -> None:
     if freq_dict is None:
         return None
 
-    top_n_list = get_top_n_words(freq_dict, top_n = 7)
-    if top_n_list is None:
+    result = get_top_n_words(freq_dict, top_n = 7)
+    if result is None:
         return None
 
-    print(top_n_list)
+    print(result)
 
     de_prifile = create_language_profile("de", de_text, stopwords)
     en_prifile = create_language_profile("en", en_text, stopwords)
@@ -64,13 +64,13 @@ def main() -> None:
     ):
         return None
 
-    language = detect_language_by_top_n(unknown_prifile, en_prifile, en_prifile, top_n = 15)
-    if language is None:
+    result = detect_language_by_top_n(unknown_prifile, de_prifile, en_prifile, top_n = 15)
+    if result is None:
         return None
-    print(language)
+    print(result)
 
 
-    #assert result, "Detection result is None"
+    assert result, "Detection result is None"
 
 if __name__ == "__main__":
     main()

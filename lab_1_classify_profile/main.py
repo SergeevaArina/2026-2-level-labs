@@ -65,14 +65,10 @@ def remove_stop_words(tokens: Sequence[str], stop_words: Sequence[str]) -> Seque
         ]):
         return None
 
-    if not all([
-        isinstance(word, str) for word in tokens
-        ]):
+    if not all(isinstance(word, str) for word in tokens):
         return None
 
-    if not all([
-        isinstance(word, str) for word in stop_words
-        ]):
+    if not all(isinstance(word, str) for word in stop_words):
         return None
 
     clean_tokens = [word for word in tokens if word not in stop_words]
@@ -95,7 +91,7 @@ def calculate_frequencies(tokens: Sequence[str]) -> dict[str, float] | None:
         ]):
         return None
 
-    if not all([isinstance(word, str) for word in tokens]):
+    if not all(isinstance(word, str) for word in tokens):
         return None
 
     tokens_num = len(tokens)
@@ -130,10 +126,10 @@ def get_top_n_words(freq_dict: dict[str, float], top_n: int) -> Sequence[str] | 
     if top_n <= 0:
         return None
 
-    if not all([
+    if not all(
         isinstance(word, str) and isinstance(number, float)
         for word, number in freq_dict.items()
-        ]):
+        ):
         return None
 
     sorted_words = sorted(freq_dict.items(), key=lambda x: (-x[1], x[0]))
@@ -168,7 +164,7 @@ def create_language_profile(
         ]):
         return None
 
-    if not all([isinstance(word, str) for word in stop_words]):
+    if not all(isinstance(word, str) for word in stop_words):
         return None
 
     tokens = tokenize(text)
@@ -211,10 +207,10 @@ def check_profile(profile: ProfileType) -> bool:
         isinstance(language, str)
         and isinstance(freq_dict, dict)
         and isinstance(uniq_token, int)
-        and all([
+        and all(
             isinstance(word, str) and isinstance(freq, float)
             for word, freq in freq_dict.items()
-            ])
+            )
         )
 
 
@@ -314,22 +310,16 @@ def calculate_mse(predicted: Sequence[float], actual: Sequence[float]) -> float 
         In case of empty inputs, returns 0.0.
     """
     if not all([
-        any([
-            isinstance(predicted, list),
-            isinstance(predicted, tuple)
-            ]),
-        any([
-            isinstance(actual, list),
-            isinstance(actual, tuple)
-            ])
+        any([isinstance(predicted, list), isinstance(predicted, tuple)]),
+        any([isinstance(actual, list), isinstance(actual, tuple)])
         ]):
         return None
 
-    if not all([isinstance(freq, float) for freq in predicted]):
+    if not all(isinstance(freq, float) for freq in predicted):
         return None
 
-    if not all([isinstance(freq, float) for freq in actual]):
-            return None
+    if not all(isinstance(freq, float) for freq in actual):
+        return None
 
     if len(predicted) != len(actual):
         return None
@@ -362,7 +352,7 @@ def compare_profiles_by_mse(
         ]):
         return None
 
-    intersection = [word for word in unknown_profile[1]]
+    intersection = list(unknown_profile[1])
     for word in profile_to_compare[1]:
         if word not in intersection:
             intersection.append(word)
