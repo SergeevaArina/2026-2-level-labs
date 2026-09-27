@@ -30,19 +30,19 @@ def main() -> None:
 
     tokens = tokenize(de_text)
     if tokens is None:
-        return None
+        return
 
     clean_tokens = remove_stop_words(tokens, stopwords)
     if clean_tokens is None:
-        return None
+        return
 
     freq_dict = calculate_frequencies(clean_tokens)
     if freq_dict is None:
-        return None
+        return
 
     result = get_top_n_words(freq_dict, top_n = 7)
     if result is None:
-        return None
+        return
 
     print(result)
 
@@ -55,7 +55,7 @@ def main() -> None:
         or en_prifile is None
         or unknown_prifile is None
     ):
-        return None
+        return
 
     if (
         check_profile(unknown_prifile) is False
@@ -66,7 +66,7 @@ def main() -> None:
 
     result = detect_language_by_top_n(unknown_prifile, de_prifile, en_prifile, top_n = 15)
     if result is None:
-        return None
+        return
     print(result)
 
 
