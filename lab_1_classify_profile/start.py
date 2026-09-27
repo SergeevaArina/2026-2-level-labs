@@ -62,7 +62,7 @@ def main() -> None:
         or check_profile(de_prifile) is False
         or check_profile(en_prifile) is False
     ):
-        return None
+        return
 
     result = detect_language_by_top_n(unknown_prifile, de_prifile, en_prifile, top_n = 15)
     if result is None:
