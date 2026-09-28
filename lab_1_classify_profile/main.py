@@ -498,7 +498,7 @@ def collect_profiles(paths_to_profiles: Sequence[str]) -> Sequence[ProfileType] 
         loaded_profile_list.append(profile)
 
     if not all(check_profile(profile) for profile in loaded_profile_list):
-            return None
+        return None
 
     return loaded_profile_list
 
