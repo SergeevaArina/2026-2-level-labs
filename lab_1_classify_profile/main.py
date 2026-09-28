@@ -623,3 +623,5 @@ def print_report(
         mse = scores["mse"]
         top_n_score = scores["top_n"]
         print(f"{language}: MSE {mse:.5f}   Top-N Score {top_n_score:.5f}")
+
+    return None

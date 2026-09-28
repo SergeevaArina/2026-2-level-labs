@@ -11,7 +11,7 @@ from lab_1_classify_profile.main import (
     detect_language_by_top_n,
     get_top_n_words,
     remove_stop_words,
-    tokenize
+    tokenize,
 )
 
 
