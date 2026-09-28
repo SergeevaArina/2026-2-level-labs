@@ -568,3 +568,58 @@ def print_report(
 
     In case of incorrect type inputs, does not print anything.
     """
+    if not check_profile(unknown_profile):
+        return None
+
+    if not any([
+        isinstance(metrics_stats, list),
+        isinstance(metrics_stats, tuple)
+        ]):
+        return None
+
+    if not isinstance(top_n, int) or top_n <= 0:
+        return None
+
+    for data in metrics_stats:
+        if not (
+            isinstance(data, tuple)
+            and len(data) == 2
+            and isinstance(data[0], str)
+            and isinstance(data[1], dict)
+            and all(isinstance(key, str) for key in data[1])
+            and all(isinstance(value, float) for value in data[1].values())
+        ):
+            return None
+
+    freq_dict = unknown_profile[1]
+
+    top_words = get_top_n_words(freq_dict, top_n)
+    if top_words is None:
+        return None
+
+    words = list(freq_dict.keys())
+
+    max_length_word = min(
+        words, key=lambda word: (-len(word), word)
+    )
+
+    min_length_word = min(
+        words, key=lambda word: (len(word), word)
+    )
+
+    average_length = sum(len(word) for word in words) / len(words)
+
+    print("Unknown language stats")
+    print("======================")
+    print(f"Popular words: {top_words}")
+    print(f"Max length word: '{max_length_word}'")
+    print(f"Min length word: '{min_length_word}'")
+    print(f"Average token length: {average_length:.5f}")
+    print()
+
+    print("Language scores")
+    print("---------------")
+    for language, scores in metrics_stats:
+        mse = scores["mse"]
+        top_n_score = scores["top_n"]
+        print(f"{language}: MSE {mse:.5f}   Top-N Score {top_n_score:.5f}")

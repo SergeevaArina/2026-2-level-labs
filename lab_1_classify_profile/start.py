@@ -7,10 +7,11 @@ from lab_1_classify_profile.main import (
     calculate_frequencies,
     check_profile,
     create_language_profile,
+    detect_language_by_mse,
     detect_language_by_top_n,
     get_top_n_words,
     remove_stop_words,
-    tokenize,
+    tokenize
 )
 
 
@@ -46,30 +47,33 @@ def main() -> None:
 
     print(result)
 
-    de_prifile = create_language_profile("de", de_text, stopwords)
-    en_prifile = create_language_profile("en", en_text, stopwords)
-    unknown_prifile = create_language_profile("unknown", unknown_text, stopwords)
+    de_profile = create_language_profile("de", de_text, stopwords)
+    en_profile = create_language_profile("en", en_text, stopwords)
+    unknown_profile = create_language_profile("unknown", unknown_text, stopwords)
 
     if (
-        de_prifile is None
-        or en_prifile is None
-        or unknown_prifile is None
+        de_profile is None
+        or en_profile is None
+        or unknown_profile is None
     ):
         return
 
     if (
-        check_profile(unknown_prifile) is False
-        or check_profile(de_prifile) is False
-        or check_profile(en_prifile) is False
+        check_profile(unknown_profile) is False
+        or check_profile(de_profile) is False
+        or check_profile(en_profile) is False
     ):
         return
 
-    result = detect_language_by_top_n(unknown_prifile, de_prifile, en_prifile, top_n = 15)
+    result = detect_language_by_top_n(unknown_profile, de_profile, en_profile, top_n = 15)
     if result is None:
         return
     print(result)
 
-
+    result = detect_language_by_mse(unknown_profile, en_profile, de_profile)
+    if result is None:
+        return
+    print(result)
     assert result, "Detection result is None"
 
 if __name__ == "__main__":
