@@ -521,6 +521,37 @@ def detect_language_advanced(
         The sequence is sorted by best MSE value, then by best Top-N value.
         Returns None in case of incorrect input types.
     """
+    if not check_profile(unknown_profile):
+        return None
+
+    if not any([
+        isinstance(known_profiles, list),
+        isinstance(known_profiles, tuple)
+    ]):
+        return None
+
+    if not isinstance(top_n, int) or top_n <= 0:
+        return None
+
+    both_scores_list = []
+    for profile in known_profiles:
+        if not check_profile(profile):
+            return None
+
+        compared_by_mse = compare_profiles_by_mse(unknown_profile, profile)
+        compared_by_top_n = compare_profiles_by_top_n(unknown_profile, profile, top_n)
+
+        if compared_by_mse is None or compared_by_top_n is None:
+            return None
+
+        scores = {"mse": compared_by_mse, "top_n": compared_by_top_n}
+        both_scores_list.append((profile[0], scores))
+
+    both_scores_list.sort(
+        key=lambda item: (item[1]["mse"], -item[1]["top_n"], item[0])
+    )
+
+    return both_scores_list
 
 
 def print_report(
