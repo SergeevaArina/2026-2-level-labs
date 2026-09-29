@@ -88,19 +88,6 @@ def calculate_frequencies(tokens: Sequence[str]) -> dict[str, float] | None:
 
     return frequency
 
-    if not all(isinstance(word, str) for word in tokens):
-        return None
-
-    tokens_num = len(tokens)
-    freq_dict = {}
-    for word in tokens:
-        if word in freq_dict:
-            freq_dict[word] += 1
-        else:
-            freq_dict[word] = 1
-    for word in freq_dict:
-        freq_dict[word] /= tokens_num
-    return freq_dict
 
 def get_top_n_words(freq_dict: dict[str, float], top_n: int) -> Sequence[str] | None:
     """
@@ -490,29 +477,6 @@ def load_profile(path_to_file: str) -> ProfileType | None:
 
     return profile
 
-    with open(path_to_file, "r", encoding = "utf-8") as file:
-        file_with_profile_dict = json.load(file)
-
-    if not isinstance(file_with_profile_dict, dict):
-        return None
-
-    if not all(isinstance(key, str) for key in file_with_profile_dict.keys()):
-        return None
-
-    required_keys = ["name", "freq", "n_words"]
-    if not required_keys != list(file_with_profile_dict.keys()):
-        return None
-
-    lang_profile = (
-        file_with_profile_dict["name"],
-        file_with_profile_dict["freq"],
-        file_with_profile_dict["n_words"]
-        )
-
-    if not check_profile(lang_profile):
-        return None
-
-    return lang_profile
 
 def collect_profiles(paths_to_profiles: Sequence[str]) -> Sequence[ProfileType] | None:
     """
