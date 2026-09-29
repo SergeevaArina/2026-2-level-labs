@@ -457,6 +457,10 @@ def load_profile(path_to_file: str) -> ProfileType | None:
     if not all(isinstance(key, str) for key in file_with_profile_dict.keys()):
         return None
 
+    required_keys = ["name", "freq", "n_words"]
+    if not required_keys != list(file_with_profile_dict.keys()):
+        return None
+
     lang_profile = (
         file_with_profile_dict["name"],
         file_with_profile_dict["freq"],
@@ -493,12 +497,11 @@ def collect_profiles(paths_to_profiles: Sequence[str]) -> Sequence[ProfileType] 
     loaded_profile_list = []
     for path in paths_to_profiles:
         profile = load_profile(path)
-        if profile is None:
-            return None
-        loaded_profile_list.append(profile)
+        if profile is not None and check_profile(profile):
+            loaded_profile_list.append(profile)
 
-    if not all(check_profile(profile) for profile in loaded_profile_list):
-        return None
+    # if not all(check_profile(profile) for profile in loaded_profile_list):
+    #     return None
 
     return loaded_profile_list
 
@@ -544,11 +547,11 @@ def detect_language_advanced(
         if compared_by_mse is None or compared_by_top_n is None:
             return None
 
-        scores = {"mse": compared_by_mse, "top_n": compared_by_top_n}
+        scores = {"MSE": compared_by_mse, "TON_N": compared_by_top_n}
         both_scores_list.append((profile[0], scores))
 
     both_scores_list.sort(
-        key=lambda item: (item[1]["mse"], -item[1]["top_n"], item[0])
+        key=lambda item: (item[1]["MSE"], -item[1]["TON_N"], item[0])
     )
 
     return both_scores_list
@@ -620,8 +623,8 @@ def print_report(
     print("Language scores")
     print("---------------")
     for language, scores in metrics_stats:
-        mse = scores["mse"]
-        top_n_score = scores["top_n"]
+        mse = scores["MSE"]
+        top_n_score = scores["TON_N"]
         print(f"{language}: MSE {mse:.5f}   Top-N Score {top_n_score:.5f}")
 
     return None

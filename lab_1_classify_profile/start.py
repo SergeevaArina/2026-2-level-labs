@@ -5,6 +5,7 @@ Language detection starter.
 # pylint: disable=unused-variable, duplicate-code, too-many-return-statements
 from lab_1_classify_profile.main import (
     calculate_frequencies,
+    calculate_mse,
     check_profile,
     create_language_profile,
     detect_language_by_mse,
@@ -45,7 +46,7 @@ def main() -> None:
     if result is None:
         return
 
-    print(result)
+    print(f"7 наиболее частотных токенов:{result}")
 
     de_profile = create_language_profile("de", de_text, stopwords)
     en_profile = create_language_profile("en", en_text, stopwords)
@@ -68,12 +69,13 @@ def main() -> None:
     result = detect_language_by_top_n(unknown_profile, de_profile, en_profile, top_n = 15)
     if result is None:
         return
-    print(result)
+    print(f"Наиболее вероятный язык по метрике top_n слов:{result}")
+
 
     result = detect_language_by_mse(unknown_profile, en_profile, de_profile)
     if result is None:
         return
-    print(result)
+    print(f"Наиболее вероятный язык по mse метрике:{result}")
     assert result, "Detection result is None"
 
 if __name__ == "__main__":
