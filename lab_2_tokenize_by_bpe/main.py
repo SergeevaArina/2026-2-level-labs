@@ -72,11 +72,11 @@ def collect_frequencies(
 
     freq_dict = {}
 
-    for word in text.split().set():
+    for word in set(text.split()):
         prepared_word = prepare_word(word, start_of_word, end_of_word)
         if prepared_word is None:
             return None
-        freq_dict[prepared_word] = text.split().count(word)
+        freq_dict[prepared_word] = set(text.split())
 
     return freq_dict
 
