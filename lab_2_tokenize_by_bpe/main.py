@@ -132,6 +132,38 @@ def merge_tokens(
 
     In case of corrupt input arguments, None is returned
     """
+    if not(
+        (isinstance(word_frequencies, dict) and word_frequencies)
+        and all(isinstance(key, tuple)
+                and all(isinstance(token, str) for token in key)
+                for key in word_frequencies)
+        and all(isinstance(value, int) for value in word_frequencies.values())
+    ):
+        return None
+
+    if not(
+        isinstance(pair, tuple)
+        and len(pair) == 2
+        and all(isinstance(token, str) for token in pair)
+    ):
+        return None
+
+    new_token = "".join(pair)
+    freq_token = {}
+
+    for key, value in word_frequencies.items():
+        list_of_tokens = list(key)
+        flag = False
+        for i in range(len(list_of_tokens) - 1):
+            if list_of_tokens[i] + list_of_tokens[i + 1] == new_token:
+                list_of_tokens[i:i+2] = [new_token]
+                flag = True
+        if flag:
+            key = tuple(list_of_tokens)
+
+        freq_token[key] = freq_token.get(key) + value
+
+    return freq_token
 
 
 def train(
@@ -152,6 +184,21 @@ def train(
     In case of corrupt input arguments or functions used return None,
     None is returned
     """
+    if not(
+        ((isinstance(word_frequencies, dict) and word_frequencies)
+        and all(isinstance(key, tuple)
+                and all(isinstance(token, str) for token in key)
+                for key in word_frequencies)
+        and all(isinstance(value, int)
+                for value in word_frequencies.values())
+        ) or word_frequencies is None
+    ):
+        return None
+
+    if not(isinstance(num_merges, int) and num_merges > 0):
+        return None
+
+
 
 
 def get_vocabulary(
@@ -170,6 +217,17 @@ def get_vocabulary(
 
     In case of corrupt input arguments, None is returned
     """
+    if not(
+        (isinstance(word_frequencies, dict) and word_frequencies)
+        and all(isinstance(key, tuple)
+                and all(isinstance(token, str) for token in key)
+                for key in word_frequencies)
+        and all(isinstance(value, int) for value in word_frequencies.values())
+    ):
+        return None
+
+    if not((isinstance(unknown_token, str) and unknown_token)):
+        return None
 
 
 def decode(
