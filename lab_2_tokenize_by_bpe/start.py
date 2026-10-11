@@ -3,9 +3,9 @@ BPE Tokenizer starter
 """
 
 # pylint:disable=too-many-locals, unused-variable
+from pathlib import Path
 from lab_2_tokenize_by_bpe.main import collect_frequencies
 
-from pathlib import Path
 
 def main() -> None:
     """
