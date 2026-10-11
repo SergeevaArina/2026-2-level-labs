@@ -66,7 +66,7 @@ def collect_frequencies(
     if not(
         (isinstance(text, str) and text)
         and (isinstance(start_of_word, str) or start_of_word is None)
-        and (isinstance(end_of_word, str) or end_of_word is None)
+        and (isinstance(end_of_word, str))
     ):
         return None
 
