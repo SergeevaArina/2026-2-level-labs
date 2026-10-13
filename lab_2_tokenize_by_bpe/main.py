@@ -198,7 +198,33 @@ def train(
     if not(isinstance(num_merges, int) and num_merges > 0):
         return None
 
+    for i in range(num_merges):
+        pairs = count_tokens_pairs(word_frequencies)
 
+        if pairs is None:
+            return None
+
+        if not not pairs:
+            return word_frequencies
+
+        best_pair = min(
+        pairs.items(),
+        key=lambda item: (
+            -item[1],
+            -len(item[0][0] + item[0][1]),
+            item[0][0] + item[0][1]
+            ),
+        default=None
+        )[0]
+
+        if best_pair is None:
+            return None
+
+        new_token = best_pair[0] + best_pair[1]
+
+        word_frequencies = (merge_tokens(word_frequencies, new_token))
+
+    return word_frequencies
 
 
 def get_vocabulary(
