@@ -160,8 +160,7 @@ def merge_tokens(
                 flag = True
         if flag:
             key = tuple(list_of_tokens)
-
-        freq_token[key] = freq_token.get(key) + value
+            freq_token[key] = freq_token.get(key, 0) + value
 
     return freq_token
 
