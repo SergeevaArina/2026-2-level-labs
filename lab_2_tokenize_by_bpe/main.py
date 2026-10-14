@@ -153,20 +153,21 @@ def merge_tokens(
 
     for key, value in word_frequencies.items():
         list_of_tokens = list(key)
-        flag = False
         i = 0
         merged = []
-        while i < len(list_of_tokens) - 1:
-            if (list_of_tokens[i] == pair[0]
-            and list_of_tokens[i + 1] == pair[1]):
+        while i < len(list_of_tokens):
+            if (
+                i < len(list_of_tokens) - 1
+                and list_of_tokens[i] == pair[0]
+                and list_of_tokens[i + 1] == pair[1]
+            ):
                 merged.append(new_token)
-                flag = True
                 i += 2
             else:
                 merged.append(list_of_tokens[i])
                 i += 1
-        if flag:
-            key = tuple(merged)
+
+        key = tuple(merged)
         freq_token[key] = freq_token.get(key, 0) + value
 
     return freq_token
@@ -226,9 +227,10 @@ def train(
         if best_pair is None:
             return None
 
-        new_token = best_pair[0] + best_pair[1]
+        word_frequencies = (merge_tokens(word_frequencies, best_pair))
 
-        word_frequencies = (merge_tokens(word_frequencies, new_token))
+        if word_frequencies is None:
+            return None
 
     return word_frequencies
 
