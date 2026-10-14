@@ -98,7 +98,7 @@ def count_tokens_pairs(
     In case of corrupt input arguments, None is returned
     """
     if not(
-        (isinstance(word_frequencies, dict) and word_frequencies)
+        (isinstance(word_frequencies, dict))
         and all(isinstance(key, tuple)
                 and all(isinstance(token, str) for token in key)
                 for key in word_frequencies)
@@ -133,7 +133,7 @@ def merge_tokens(
     In case of corrupt input arguments, None is returned
     """
     if not(
-        (isinstance(word_frequencies, dict) and word_frequencies)
+        (isinstance(word_frequencies, dict))
         and all(isinstance(key, tuple)
                 and all(isinstance(token, str) for token in key)
                 for key in word_frequencies)
@@ -154,13 +154,20 @@ def merge_tokens(
     for key, value in word_frequencies.items():
         list_of_tokens = list(key)
         flag = False
-        for i in range(len(list_of_tokens) - 1):
-            if list_of_tokens[i] + list_of_tokens[i + 1] == new_token:
-                list_of_tokens[i:i+2] = [new_token]
+        i = 0
+        merged = []
+        while i < len(list_of_tokens) - 1:
+            if (list_of_tokens[i] == pair[0]
+            and list_of_tokens[i + 1] == pair[1]):
+                merged.append(new_token)
                 flag = True
+                i += 2
+            else:
+                merged.append(list_of_tokens[i])
+                i += 1
         if flag:
-            key = tuple(list_of_tokens)
-            freq_token[key] = freq_token.get(key, 0) + value
+            key = tuple(merged)
+        freq_token[key] = freq_token.get(key, 0) + value
 
     return freq_token
 
@@ -184,7 +191,7 @@ def train(
     None is returned
     """
     if not(
-        ((isinstance(word_frequencies, dict) and word_frequencies)
+        ((isinstance(word_frequencies, dict))
         and all(isinstance(key, tuple)
                 and all(isinstance(token, str) for token in key)
                 for key in word_frequencies)
@@ -243,7 +250,7 @@ def get_vocabulary(
     In case of corrupt input arguments, None is returned
     """
     if not(
-        (isinstance(word_frequencies, dict) and word_frequencies)
+        (isinstance(word_frequencies, dict))
         and all(isinstance(key, tuple)
                 and all(isinstance(token, str) for token in key)
                 for key in word_frequencies)
