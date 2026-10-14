@@ -211,7 +211,7 @@ def train(
         if pairs is None:
             return None
 
-        if not not pairs:
+        if not pairs:
             return word_frequencies
 
         best_pair = min(
