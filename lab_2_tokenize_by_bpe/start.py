@@ -29,6 +29,8 @@ def main() -> None:
     print(result)
 
     word_frequencies = train(result, 100)
+    if word_frequencies is None:
+        return None
     result = get_vocabulary(word_frequencies, "<unk>")
     print(result)
 

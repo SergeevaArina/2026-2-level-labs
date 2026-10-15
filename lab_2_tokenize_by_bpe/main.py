@@ -192,7 +192,7 @@ def train(
     None is returned
     """
     if word_frequencies is None:
-            return None
+        return None
 
     if not(
         (isinstance(word_frequencies, dict))
