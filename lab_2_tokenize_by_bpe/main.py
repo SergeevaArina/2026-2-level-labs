@@ -331,7 +331,12 @@ def decode(
         if token is None:
             return None
         decoded_token_list.append(token)
+
     decoded_text = "".join(decoded_token_list)
+
+    if end_of_word_token is not None:
+        decoded_text = decoded_text.replace(end_of_word_token, " ")
+
     return decoded_text
 
 
