@@ -191,21 +191,23 @@ def train(
     In case of corrupt input arguments or functions used return None,
     None is returned
     """
+    if word_frequencies is None:
+            return None
+
     if not(
-        ((isinstance(word_frequencies, dict))
+        (isinstance(word_frequencies, dict))
         and all(isinstance(key, tuple)
                 and all(isinstance(token, str) for token in key)
                 for key in word_frequencies)
         and all(isinstance(value, int)
                 for value in word_frequencies.values())
-        ) or word_frequencies is None
     ):
         return None
 
     if not(isinstance(num_merges, int) and num_merges > 0):
         return None
 
-    for i in range(num_merges):
+    for _ in range(num_merges):
         pairs = count_tokens_pairs(word_frequencies)
 
         if pairs is None:
@@ -227,7 +229,7 @@ def train(
         if best_pair is None:
             return None
 
-        word_frequencies = (merge_tokens(word_frequencies, best_pair))
+        word_frequencies = merge_tokens(word_frequencies, best_pair)
 
         if word_frequencies is None:
             return None
@@ -260,7 +262,7 @@ def get_vocabulary(
     ):
         return None
 
-    if not((isinstance(unknown_token, str) and unknown_token)):
+    if not(isinstance(unknown_token, str) and unknown_token):
         return None
 
     uniq_voc = {unknown_token}
@@ -277,7 +279,7 @@ def get_vocabulary(
                             )
     new_uniq_voc = {}
     for i, token in enumerate(sorted_uniq_voc):
-        new_uniq_voc[key] = i
+        new_uniq_voc[token] = i
 
     return new_uniq_voc
 
@@ -301,6 +303,13 @@ def decode(
 
     In case of corrupt input arguments, None is returned
     """
+    if (
+        encoded_text is None
+        or vocabulary is None
+        or end_of_word_token is None
+    ):
+        return None
+
     if not(
         (isinstance(encoded_text, Sequence) and encoded_text)
         and all(isinstance(symbol, int) for symbol in encoded_text)
@@ -308,27 +317,22 @@ def decode(
         and all(isinstance(token, str)
                 and isinstance(index, int)
                 for token, index in vocabulary.items())
-        and ((isinstance(end_of_word_token, str) and end_of_word_token) or end_of_word_token is None)
+        and (
+            (isinstance(end_of_word_token, str)
+            and end_of_word_token)
+            )
     ):
         return None
 
-    if encoded_text is None or vocabulary is None:
-        return None
-
+    inverse = {index: token for token, index in vocabulary.items()}
     decoded_token_list = []
     for index in encoded_text:
-        for key in vocabulary:
-            if vocabulary[key] == index:
-                decoded_token_list.append(key)
-            else:
-                return None
-
+        token = inverse.get(index)
+        if token is None:
+            return None
+        decoded_token_list.append(token)
     decoded_text = "".join(decoded_token_list)
-    if end_of_word_token is not None:
-        decoded_text = decoded_text.replace(end_of_word_token, " ")
-
     return decoded_text
-
 
 
 def tokenize_word(

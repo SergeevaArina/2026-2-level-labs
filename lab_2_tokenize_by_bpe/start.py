@@ -33,8 +33,6 @@ def main() -> None:
     print(result)
 
     assert result, "Translation not working"
-    return None
-
 
 
 if __name__ == "__main__":
