@@ -201,10 +201,9 @@ def train(
                 for key in word_frequencies)
         and all(isinstance(value, int)
                 for value in word_frequencies.values())
+        and isinstance(num_merges, int)
+        and num_merges > 0
     ):
-        return None
-
-    if not(isinstance(num_merges, int) and num_merges > 0):
         return None
 
     for _ in range(num_merges):
@@ -225,9 +224,6 @@ def train(
             ),
         default=None
         )[0]
-
-        if best_pair is None:
-            return None
 
         word_frequencies = merge_tokens(word_frequencies, best_pair)
 
