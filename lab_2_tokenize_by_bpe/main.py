@@ -301,6 +301,34 @@ def decode(
 
     In case of corrupt input arguments, None is returned
     """
+    if not(
+        (isinstance(encoded_text, Sequence) and encoded_text)
+        and all(isinstance(symbol, int) for symbol in encoded_text)
+        and (isinstance(vocabulary, dict) and vocabulary)
+        and all(isinstance(token, str)
+                and isinstance(index, int)
+                for token, index in vocabulary.items())
+        and ((isinstance(end_of_word_token, str) and end_of_word_token) or end_of_word_token is None)
+    ):
+        return None
+
+    if encoded_text is None or vocabulary is None:
+        return None
+
+    decoded_token_list = []
+    for index in encoded_text:
+        for key in vocabulary:
+            if vocabulary[key] == index:
+                decoded_token_list.append(key)
+            else:
+                return None
+
+    decoded_text = "".join(decoded_token_list)
+    if end_of_word_token is not None:
+        decoded_text = decoded_text.replace(end_of_word_token, " ")
+
+    return decoded_text
+
 
 
 def tokenize_word(
