@@ -301,7 +301,6 @@ def decode(
     if (
         encoded_text is None
         or vocabulary is None
-        or end_of_word_token is None
     ):
         return None
 
