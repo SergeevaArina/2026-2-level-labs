@@ -311,8 +311,8 @@ def decode(
         and all(isinstance(token, str)
                 and isinstance(index, int)
                 for token, index in vocabulary.items())
-        and (
-            (isinstance(end_of_word_token, str)
+        and (end_of_word_token is None
+            or (isinstance(end_of_word_token, str)
             and end_of_word_token)
             )
     ):
