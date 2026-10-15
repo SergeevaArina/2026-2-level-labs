@@ -31,8 +31,8 @@ def main() -> None:
     word_frequencies = train(result, 100)
     if word_frequencies is None:
         return
-    result = get_vocabulary(word_frequencies, "<unk>")
-    print(result)
+    new_vocabularly = get_vocabulary(word_frequencies, "<unk>")
+    print(new_vocabularly)
 
     assert result, "Translation not working"
 

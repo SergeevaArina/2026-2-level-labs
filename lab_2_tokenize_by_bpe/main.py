@@ -222,7 +222,6 @@ def train(
             -len(item[0][0] + item[0][1]),
             item[0][0] + item[0][1]
             ),
-        default=None
         )[0]
 
         word_frequencies = merge_tokens(word_frequencies, best_pair)
