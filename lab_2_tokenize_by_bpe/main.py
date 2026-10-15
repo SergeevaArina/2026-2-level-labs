@@ -263,6 +263,24 @@ def get_vocabulary(
     if not((isinstance(unknown_token, str) and unknown_token)):
         return None
 
+    uniq_voc = {unknown_token}
+
+    for key in word_frequencies:
+        for token in key:
+            for symbol in token:
+                uniq_voc.add(symbol)
+            uniq_voc.add(token)
+
+    sorted_uniq_voc = sorted(uniq_voc,
+                            key=lambda token:
+                            (-len(token), token)
+                            )
+    new_uniq_voc = {}
+    for i, token in enumerate(sorted_uniq_voc):
+        new_uniq_voc[key] = i
+
+    return new_uniq_voc
+
 
 def decode(
     encoded_text: Sequence[int] | None,
