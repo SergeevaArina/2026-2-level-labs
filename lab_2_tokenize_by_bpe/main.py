@@ -5,6 +5,7 @@ BPE and machine translation evaluation
 """
 
 # pylint:disable=unused-argument
+# pylint:disable=too-many-return-statements
 from typing import Sequence
 
 
@@ -329,7 +330,7 @@ def decode(
     ):
         return None
 
-    if (
+    if not(
         end_of_word_token is None
         or (isinstance(end_of_word_token, str) and end_of_word_token)
     ):
