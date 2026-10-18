@@ -369,7 +369,50 @@ def tokenize_word(
 
     In case of corrupt input arguments, None is returned
     """
+    if not(
+        isinstance(word, tuple) and word
+        and all(
+            isinstance(token, str) for token in word
+        )
+        and isinstance(vocabulary, dict) and vocabulary
+        and all(
+            isinstance(key, str) and isinstance(value, int)
+            for key, value in vocabulary.items()
+        )
+        and isinstance(unknown_token, str) and unknown_token
+    ):
+        return None
 
+    if not(
+        end_of_word is None
+        or (isinstance(end_of_word, str) and end_of_word)
+    ):
+        return None
+
+    sorted_vocabulary = sorted(
+        vocabulary.keys(), key=lambda token: (-len(token), token)
+        )
+
+    str_word = "".join(word)
+    token_id_list = []
+    i = 0
+
+    while i < len(str_word):
+        matched = 0
+        for token in sorted_vocabulary:
+            if token == unknown_token:
+                continue
+            if str_word.startswith(token, i):
+                matched = token
+                break
+        if matched != 0:
+            token_id_list.append(vocabulary[matched])
+            i += len(matched)
+        else:
+            token_id_list.append(vocabulary[unknown_token])
+            i += 1
+
+    return token_id_list
 
 
 def load_vocabulary(vocab_path: str) -> dict[str, int] | None:
