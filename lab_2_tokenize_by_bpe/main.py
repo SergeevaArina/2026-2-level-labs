@@ -390,7 +390,7 @@ def tokenize_word(
         return None
 
     sorted_tokens = dict(sorted(
-        vocabulary.keys(), key=lambda token: (-len(token), token)
+        vocabulary.items(), key=lambda token: (-len(token[0]), token[0])
         ))
 
     str_word = "".join(word)
