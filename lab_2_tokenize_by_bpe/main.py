@@ -389,7 +389,7 @@ def tokenize_word(
     ):
         return None
 
-    sorted_vocabulary = sorted(
+    sorted_tokens = sorted(
         vocabulary.keys(), key=lambda token: (-len(token), token)
         )
 
@@ -399,16 +399,16 @@ def tokenize_word(
 
     while i < len(str_word):
         matched = 0
-        for token in sorted_vocabulary:
-            if token == unknown_token:
-                continue
-            if str_word.startswith(token, i):
-                matched = token
+
+        # Проверяем все токены от длинных к коротким
+        for token, token_id in sorted_tokens:
+            if str_word[i:i+len(token)] == token:
+                token_id_list.append(token_id)
+                i += len(token)
+                matched = 1
                 break
-        if matched != 0:
-            token_id_list.append(vocabulary[matched])
-            i += len(matched)
-        else:
+
+        if not matched:
             token_id_list.append(vocabulary[unknown_token])
             i += 1
 
