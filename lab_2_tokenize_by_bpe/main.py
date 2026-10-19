@@ -389,9 +389,9 @@ def tokenize_word(
     ):
         return None
 
-    sorted_tokens: list[tuple[str, int]] = sorted(
+    sorted_tokens = dict(sorted(
         vocabulary.keys(), key=lambda token: (-len(token), token)
-        )
+        ))
 
     str_word = "".join(word)
     token_id_list = []
@@ -400,7 +400,7 @@ def tokenize_word(
     while i < len(str_word):
         matched = False
 
-        for token, token_id in sorted_tokens:
+        for token, token_id in sorted_tokens.items():
             if str_word[i:i+len(token)] == token:
                 token_id_list.append(token_id)
                 i += len(token)
