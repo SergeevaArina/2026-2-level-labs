@@ -398,13 +398,13 @@ def tokenize_word(
     i = 0
 
     while i < len(str_word):
-        matched = 0
+        matched = False
 
         for token, token_id in sorted_tokens:
             if str_word[i:i+len(token)] == token:
                 token_id_list.append(token_id)
                 i += len(token)
-                matched = 1
+                matched = True
                 break
 
         if not matched:
