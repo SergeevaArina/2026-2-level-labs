@@ -23,6 +23,8 @@ class TextProcessor:
         Args:
             end_of_word_token (str): A token denoting word boundary
         """
+        self._end_of_word_token = end_of_word_token
+        self._tokens = {end_of_word_token: 0}
 
     def _tokenize(self, text: str) -> tuple[str, ...] | None:
         """
@@ -41,6 +43,27 @@ class TextProcessor:
         In case of corrupt input arguments, None is returned.
         In case any of methods used return None, None is returned.
         """
+        if not isinstance(text, str):
+            return None
+
+        end_of_word_token = self.get_end_of_word_token()
+
+        preprocessed_text = "".join(
+            token
+            for token in text.lower()
+            if token.isalpha() or token == " "
+        ).split()
+
+        if not preprocessed_text:
+            return None
+
+        sym_tokens = []
+        for token in preprocessed_text:
+            sym_tokens.extend(sym for sym in token)
+            if not(token is preprocessed_text[-1] and text[-1].isalpha()):
+                sym_tokens.append(end_of_word_token)
+
+        return tuple(sym_tokens)
 
     def get_id(self, element: str) -> int | None:
         """
@@ -55,6 +78,10 @@ class TextProcessor:
         In case of corrupt input arguments or arguments not included in storage,
         None is returned
         """
+        if not isinstance(element, str):
+            return None
+
+        return self._tokens.get(element)
 
     def get_end_of_word_token(self) -> str:  # type: ignore[empty-body]
         """
@@ -63,6 +90,7 @@ class TextProcessor:
         Returns:
             str: EoW token
         """
+        return self._end_of_word_token
 
     def get_token(self, element_id: int) -> str | None:
         """
