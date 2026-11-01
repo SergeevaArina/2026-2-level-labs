@@ -6,6 +6,7 @@ BPE and machine translation evaluation
 
 # pylint:disable=unused-argument
 # pylint:disable=too-many-return-statements
+from json import load
 from typing import Sequence
 
 
