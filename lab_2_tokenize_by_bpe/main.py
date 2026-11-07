@@ -6,6 +6,7 @@ BPE and machine translation evaluation
 
 # pylint:disable=unused-argument
 from json import load
+from math import exp, log
 from typing import Sequence
 
 
@@ -196,7 +197,11 @@ def train(
     In case of corrupt input arguments or functions used return None,
     None is returned
     """
-    if (word_frequencies is None) or (not isinstance(word_frequencies, dict)):
+    if not (
+        isinstance(word_frequencies, dict | None)
+        and isinstance(num_merges, int)
+        and num_merges > 0
+    ):
         return None
 
     for word, frequency in word_frequencies.items():
@@ -206,12 +211,6 @@ def train(
             and isinstance(frequency, int)
         ):
             return None
-
-    if not(
-        isinstance(num_merges, int)
-        and num_merges > 0
-    ):
-        return None
 
     for _ in range(num_merges):
         pairs = count_tokens_pairs(word_frequencies)
@@ -552,6 +551,7 @@ def calculate_precision(
     """
     if not (
         isinstance(actual, Sequence)
+        and isinstance(reference, Sequence)
     ):
         return None
 
@@ -564,11 +564,6 @@ def calculate_precision(
         ):
             return None
 
-    if not(
-        isinstance(reference, Sequence)
-    ):
-        return None
-
     for n_gram in reference:
         if not(
             isinstance(n_gram, tuple)
@@ -578,6 +573,14 @@ def calculate_precision(
             )
         ):
             return None
+
+    if not actual:
+        return 0.0
+
+    matched = actual & reference
+
+    return len(matched) / len(actual)
+
 
 def calculate_geo_mean(precisions: Sequence[float], max_order: int) -> float | None:
     """
@@ -595,13 +598,21 @@ def calculate_geo_mean(precisions: Sequence[float], max_order: int) -> float | N
     if not(
         isinstance(precisions, Sequence)
         and all(
-            isinstance(number, float)
-            for number in precisions
+            isinstance(precision, float)
+            for precision in precisions
         )
         and isinstance(max_order, int)
         and max_order > 0
     ):
         return None
+
+    log_n_gram = 0.0
+    for precision in precisions:
+        if precision < 0:
+            return None
+        log_n_gram += log(precision)
+
+    return exp(log_n_gram)
 
 
 def calculate_bleu(actual: str | None, reference: str, max_order: int = 3) -> float | None:
