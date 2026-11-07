@@ -222,7 +222,7 @@ def train(
             return None
 
         if not pairs:
-            return word_frequencies
+            break
 
         best_pair = min(
         pairs.items(),
@@ -607,7 +607,7 @@ def calculate_precision(
 
     matched = set(actual) & set(reference)
 
-    return len(matched) / len(actual)
+    return len(matched) / len(set(actual))
 
 
 def calculate_geo_mean(precisions: Sequence[float], max_order: int) -> float | None:
@@ -637,7 +637,7 @@ def calculate_geo_mean(precisions: Sequence[float], max_order: int) -> float | N
 
     log_n_gram = 0.0
     for precision in precisions:
-        if precision < 0:
+        if precision <= 0:
             return 0.0
         log_n_gram += log(precision)
 
@@ -661,13 +661,37 @@ def calculate_bleu(actual: str | None, reference: str, max_order: int = 3) -> fl
     """
     if not(
         isinstance(reference, str)
+        and reference
         and isinstance(max_order, int)
         and max_order > 0
     ):
         return None
 
     if (
-        isinstance(actual, str)
+        not(isinstance(actual, str) and actual)
         or actual is None
     ):
         return None
+
+    precisions = []
+
+    for i in range(1, max_order + 1):
+        act_n_gram = collect_ngrams(actual, i)
+        ref_n_gram = collect_ngrams(reference, i)
+
+        if act_n_gram is None or ref_n_gram is None:
+            return None
+
+        precision = calculate_precision(act_n_gram, ref_n_gram)
+
+        if precision is None:
+            return None
+
+        precisions.append(precision)
+
+    geo_mean = calculate_geo_mean(precisions, max_order)
+
+    if geo_mean is None:
+        return None
+
+    return geo_mean * 100
