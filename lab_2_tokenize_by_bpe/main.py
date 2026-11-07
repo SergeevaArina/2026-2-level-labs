@@ -317,7 +317,6 @@ def decode(
     if (
         encoded_text is None
         or vocabulary is None
-        or end_of_word_token is None
     ):
         return None
 
@@ -340,7 +339,8 @@ def decode(
         return None
 
     if not(
-        (isinstance(end_of_word_token, str) and end_of_word_token)
+        end_of_word_token is None
+        or (isinstance(end_of_word_token, str) and end_of_word_token)
     ):
         return None
 
@@ -397,29 +397,49 @@ def tokenize_word(
     ):
         return None
 
-    sorted_tokens = dict(sorted(
-        vocabulary.items(), key=lambda token: (-len(token[0]), token[0])
-        ))
-
     str_word = "".join(word)
-    token_id_list = []
-    i = 0
+    if (
+        end_of_word is not None
+        and not str_word.endswith(end_of_word)
+    ):
+        str_word += end_of_word
 
-    while i < len(str_word):
-        matched = False
+    parts: list[str | None] = [None] * len(str_word)
 
-        for token, token_id in sorted_tokens.items():
-            if str_word[i:i+len(token)] == token:
-                token_id_list.append(token_id)
-                i += len(token)
-                matched = True
-                break
+    sorted_tokens = sorted(
+        vocabulary.keys(), key=lambda token: (-len(token), token)
+    )
 
-        if not matched:
-            token_id_list.append(vocabulary[unknown_token])
-            i += 1
+    for token in sorted_tokens:
+        if token and token != unknown_token:
+            token_len = len(token)
+            ind = 0
+            while ind <= len(parts) - token_len:
+                if (
+                    not any(parts[ind:ind + token_len])
+                    and str_word[ind:ind + token_len] == token
+                ):
+                    parts[ind:ind + token_len] = [token] * token_len
+                    ind += token_len
+                else:
+                    ind += 1
 
-    return token_id_list
+    unknown_id = vocabulary.get(unknown_token)
+    if unknown_id is None:
+        return None
+
+    encoded_ids = []
+    ind = 0
+    while ind < len(parts):
+        part = parts[ind]
+        if part is None:
+            encoded_ids.append(unknown_id)
+            ind += 1
+        else:
+            encoded_ids.append(vocabulary[part])
+            ind += len(part)
+
+    return encoded_ids
 
 
 def load_vocabulary(vocab_path: str) -> dict[str, int] | None:
@@ -471,20 +491,25 @@ def encode(
     """
     if not (
         isinstance(original_text, str)
+        and original_text
         and (
             start_of_word_token is None
             or isinstance(start_of_word_token, str)
+            and start_of_word_token
             )
         and (
             end_of_word_token is None
             or isinstance(end_of_word_token, str)
+            and end_of_word_token
             )
         and isinstance(unknown_token, str)
+        and unknown_token
     ):
         return None
 
     if not(
         isinstance(vocabulary, dict)
+        and vocabulary
         and all(
             isinstance(key, str) and isinstance(value, int)
             for key, value in vocabulary.items()
@@ -600,8 +625,9 @@ def calculate_geo_mean(precisions: Sequence[float], max_order: int) -> float | N
     """
     if not(
         isinstance(precisions, Sequence)
+        and precisions
         and all(
-            isinstance(precision, float)
+            isinstance(precision, (float, int))
             for precision in precisions
         )
         and isinstance(max_order, int)
@@ -615,7 +641,7 @@ def calculate_geo_mean(precisions: Sequence[float], max_order: int) -> float | N
             return 0.0
         log_n_gram += log(precision)
 
-    return exp(log_n_gram) / max_order
+    return exp(log_n_gram / max_order)
 
 
 def calculate_bleu(actual: str | None, reference: str, max_order: int = 3) -> float | None:
