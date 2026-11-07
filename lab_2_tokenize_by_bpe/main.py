@@ -5,7 +5,6 @@ BPE and machine translation evaluation
 """
 
 # pylint:disable=unused-argument
-# pylint:disable=too-many-return-statements
 from json import load
 from typing import Sequence
 
@@ -257,15 +256,21 @@ def get_vocabulary(
     In case of corrupt input arguments, None is returned
     """
     if not(
-        (isinstance(word_frequencies, dict))
-        and all(isinstance(key, tuple)
-                and all(isinstance(token, str) for token in key)
-                for key in word_frequencies)
-        and all(isinstance(value, int) for value in word_frequencies.values())
+        isinstance(word_frequencies, dict)
     ):
         return None
 
-    if not(isinstance(unknown_token, str) and unknown_token):
+    for word, frequency in word_frequencies.items():
+        if not (
+            isinstance(word, tuple)
+            and all(isinstance(token, str) for token in word)
+            and isinstance(frequency, int)
+        ):
+            return None
+
+    if not(
+        isinstance(unknown_token, str) and unknown_token
+    ):
         return None
 
     uniq_voc = {unknown_token}
@@ -516,6 +521,18 @@ def collect_ngrams(text: str, order: int) -> list[tuple[str, ...]] | None:
 
     In case of corrupt input arguments, None is returned
     """
+    if not(
+        isinstance(text, str) and text
+        and isinstance(order, int) and order > 0
+    ):
+        return None
+
+    n_grams = []
+
+    for i in range(len(text) - order + 1):
+        n_grams.append(tuple(text[i:i + order]))
+
+    return n_grams
 
 
 def calculate_precision(
@@ -533,7 +550,34 @@ def calculate_precision(
 
     In case of corrupt input arguments, None is returned.
     """
+    if not (
+        isinstance(actual, Sequence)
+    ):
+        return None
 
+    for n_gram in actual:
+        if not(
+            isinstance(n_gram, tuple)
+            and all(
+                isinstance(token, str) for token in n_gram
+            )
+        ):
+            return None
+
+    if not(
+        isinstance(reference, Sequence)
+    ):
+        return None
+
+    for n_gram in reference:
+        if not(
+            isinstance(n_gram, tuple)
+            and all(
+                isinstance(token, str)
+                for token in n_gram
+            )
+        ):
+            return None
 
 def calculate_geo_mean(precisions: Sequence[float], max_order: int) -> float | None:
     """
@@ -548,6 +592,16 @@ def calculate_geo_mean(precisions: Sequence[float], max_order: int) -> float | N
 
     In case of corrupt input arguments, None is returned
     """
+    if not(
+        isinstance(precisions, Sequence)
+        and all(
+            isinstance(number, float)
+            for number in precisions
+        )
+        and isinstance(max_order, int)
+        and max_order > 0
+    ):
+        return None
 
 
 def calculate_bleu(actual: str | None, reference: str, max_order: int = 3) -> float | None:
@@ -565,3 +619,15 @@ def calculate_bleu(actual: str | None, reference: str, max_order: int = 3) -> fl
     In case of corrupt input arguments or functions used return None,
     None is returned
     """
+    if not(
+        isinstance(reference, str)
+        and isinstance(max_order, int)
+        and max_order > 0
+    ):
+        return None
+
+    if (
+        isinstance(actual, str)
+        or actual is None
+    ):
+        return None
