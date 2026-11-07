@@ -609,7 +609,7 @@ def calculate_geo_mean(precisions: Sequence[float], max_order: int) -> float | N
     log_n_gram = 0.0
     for precision in precisions:
         if precision < 0:
-            return None
+            return 0.0
         log_n_gram += log(precision)
 
     return exp(log_n_gram)
