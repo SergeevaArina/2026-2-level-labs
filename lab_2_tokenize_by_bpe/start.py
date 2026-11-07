@@ -42,12 +42,12 @@ def main() -> None:
 
     word_frequencies = train(result, 100)
     if word_frequencies is None:
-        return
+        return None
     print(word_frequencies)
 
     new_vocabularly = get_vocabulary(word_frequencies, "<unk>")
     if new_vocabularly is None:
-        return
+        return None
     print(new_vocabularly)
 
     print()
@@ -64,7 +64,7 @@ def main() -> None:
     ru_vocabulary = load_vocabulary("lab_2_tokenize_by_bpe/assets/vocab.json")
 
     if ru_vocabulary is None:
-        return
+        return None
 
 
     ru_encoded = encode(
@@ -76,12 +76,11 @@ def main() -> None:
     )
 
     if ru_encoded is None:
-        return
+        return None
 
     ru_to_compare = [int(index) for index in ru_encoded_to_compare.split()]
 
     if ru_encoded == ru_to_compare:
-        print("Translation is working")
         print(
     f"""
 Encoded text: {ru_encoded[:20]}
@@ -95,7 +94,7 @@ Encoded text to compare: {ru_to_compare[:20]}
     en_vocabulary = load_vocabulary("lab_2_tokenize_by_bpe/assets/vocab.json")
 
     if en_vocabulary is None:
-        return
+        return None
 
     translation_decoded = decode(
         translation_encoded,
@@ -103,7 +102,7 @@ Encoded text to compare: {ru_to_compare[:20]}
         None,
     )
 
-    assert translation_decoded, "Decoded translation is None"
+    assert translation_decoded, "Translation not working"
 
     translation_decoded = translation_decoded.replace("\u2581", " ")
 
@@ -121,6 +120,9 @@ Reference translation: {text_reference_translation}
 BLEU: {bleu}
     """
     )
+
+    assert bleu, "BLUE is None"
+    return None
 
 
 if __name__ == "__main__":
