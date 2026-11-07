@@ -197,8 +197,11 @@ def train(
     In case of corrupt input arguments or functions used return None,
     None is returned
     """
+    if word_frequencies is None:
+        return None
+
     if not (
-        isinstance(word_frequencies, dict | None)
+        isinstance(word_frequencies, dict)
         and isinstance(num_merges, int)
         and num_merges > 0
     ):
@@ -314,6 +317,7 @@ def decode(
     if (
         encoded_text is None
         or vocabulary is None
+        or end_of_word_token is None
     ):
         return None
 
@@ -336,8 +340,7 @@ def decode(
         return None
 
     if not(
-        end_of_word_token is None
-        or (isinstance(end_of_word_token, str) and end_of_word_token)
+        (isinstance(end_of_word_token, str) and end_of_word_token)
     ):
         return None
 
@@ -577,7 +580,7 @@ def calculate_precision(
     if not actual:
         return 0.0
 
-    matched = actual & reference
+    matched = set(actual) & set(reference)
 
     return len(matched) / len(actual)
 
@@ -612,7 +615,7 @@ def calculate_geo_mean(precisions: Sequence[float], max_order: int) -> float | N
             return 0.0
         log_n_gram += log(precision)
 
-    return exp(log_n_gram)
+    return exp(log_n_gram) / max_order
 
 
 def calculate_bleu(actual: str | None, reference: str, max_order: int = 3) -> float | None:
