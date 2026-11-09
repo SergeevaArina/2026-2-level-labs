@@ -404,7 +404,7 @@ def tokenize_word(
     ):
         str_word += end_of_word
 
-    parts = [None] * len(str_word)
+    parts = [0] * len(str_word)
 
     sorted_tokens = sorted(
         vocabulary.keys(), key=lambda token: (-len(token), token)
