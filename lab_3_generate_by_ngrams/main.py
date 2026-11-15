@@ -24,7 +24,7 @@ class TextProcessor:
             end_of_word_token (str): A token denoting word boundary
         """
         self._end_of_word_token = end_of_word_token
-        self._tokens = {end_of_word_token: 0}
+        self._storage = {end_of_word_token: 0}
 
     def _tokenize(self, text: str) -> tuple[str, ...] | None:
         """
@@ -49,8 +49,7 @@ class TextProcessor:
         end_of_word_token = self.get_end_of_word_token()
 
         preprocessed_text = "".join(
-            token
-            for token in text.lower()
+            token for token in text.lower()
             if token.isalpha() or token == " "
         ).split()
 
@@ -104,6 +103,12 @@ class TextProcessor:
 
         In case of corrupt input arguments or arguments not included in storage, None is returned
         """
+        if not isinstance(element_id, int):
+            return None
+
+        rev_dict = {v: k for k, v in self._storage.items()}
+
+        return rev_dict.get(element_id)
 
     def encode(self, text: str) -> tuple[int, ...] | None:
         """
@@ -121,6 +126,27 @@ class TextProcessor:
         In case of corrupt input arguments, None is returned.
         In case any of methods used return None, None is returned.
         """
+        if not isinstance(text, str):
+            return None
+
+        tokens = self._tokenize(text)
+
+        if tokens is None:
+            return None
+
+        encoded_text = []
+
+        for token in tokens:
+            self._put(token)
+
+            token_id = self.get_id(token)
+
+            if token_id is None:
+                return None
+
+            encoded_text.append(token_id)
+
+        return tuple(encoded_text)
 
     def _put(self, element: str) -> None:
         """
@@ -132,6 +158,13 @@ class TextProcessor:
         In case of corrupt input arguments or invalid argument length,
         an element is not added to storage
         """
+        if not isinstance(element, str) or len(element) != 1:
+            return None
+
+        if element not in self._storage:
+            self._storage[element] = len(self._storage)
+
+        return None
 
     def decode(self, encoded_corpus: tuple[int, ...]) -> str | None:
         """
