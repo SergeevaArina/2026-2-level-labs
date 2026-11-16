@@ -158,7 +158,7 @@ class TextProcessor:
         In case of corrupt input arguments or invalid argument length,
         an element is not added to storage
         """
-        if not isinstance(element, str) or not element:
+        if not isinstance(element, str) or not len(element) != 1:
             return None
 
         if element not in self._storage:
@@ -271,7 +271,31 @@ class TextProcessor:
         ):
             return None
 
+        eow = self.get_end_of_word_token()
 
+        chars = []
+
+        for token in decoded_corpus:
+            if token == eow:
+                chars.append(" ")
+            else:
+                chars.append(token)
+
+        text = "".join(chars)
+
+        while "  " in text:
+            text = text.replace("  ", " ")
+        text = text.strip()
+
+        if not text:
+            return None
+
+        text = text[0].upper() + text[1:]
+
+        if not text.endswith("."):
+            text += "."
+
+        return text
 
 class WordProcessor(TextProcessor):
     """
